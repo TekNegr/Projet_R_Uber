@@ -92,21 +92,40 @@ get_spec_data<-function(month, type_data = "reduced_data"){
 raw_data <- read.csv("UberDatasets/uber-raw-data-jun14.csv")
 cleaned_data <- clean_data(raw_data)
 #data_list <- get_data()  # Obtenez une liste de données pour différents mois
+data_list <- get_data()  # Chargez toutes les données dans une variable globale
 jun_data <- data_list[["jun14"]]  # Récupérez les données de juin 2014
-cleaned_jun_data <- clean_data(jun_data)  # Nettoyez ces données
+# Nettoyer et transformer les données pour un mois spécifique
+jun_data_encoded <- data_list[["jun14"]]$encoded_data  # Données encodées
+cleaned_jun_data <- clean_data(jun_data_encoded)  # Nettoyer et réduire les données
+# Afficher les résultats
+print(head(cleaned_jun_data))
 #str(data_all$jun14)  # Vérifiez les données pour "jun14"
 jun_data <- get_spec_data("jun14")
-month <- "jun14"
-if (month %in% names(data_test)) {
-  print("Valid month")
+# Charger les données
+data_test <- get_data()
+
+# Vérifiez si data_test existe
+if (exists("data_test") && !is.null(data_test)) {
+  print("Les données ont été chargées avec succès.")
+  
+  # Vérifiez les mois disponibles
+  print(names(data_test))
+  
+  # Accédez à un mois spécifique
+  month <- "jun14"
+  if (month %in% names(data_test)) {
+    jun_data <- data_test[[month]]
+    print(head(jun_data$reduced_data))  # Affiche les données réduites pour juin
+  } else {
+    print("Le mois 'jun14' n'est pas dans les données.")
+  }
 } else {
-  print("Invalid month")
+  print("Erreur : data_test n'a pas été chargé correctement.")
 }
+
 
 message("Data successfully loaded for month: ", month)
 print(head(jun_data))  # Afficher les premières lignes des données
 print(names(data_test))  # Voir les mois disponibles
 #data_test$apr14[1:10, ]
-
-
 
